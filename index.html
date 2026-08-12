@@ -3,23 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sarosh's dark room</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>Valiant Video Enterprises</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <main class="container">
-        <h1 class="title">Camera... Action!</h1>
-        <p class="description">Это мой первый сайт...</p>
-        
-        <div class="card">
-            <!-- Вставка гифки -->
-            <img src="assets/manhunt-1-manhunt-game.gif" alt="manhunt1_gif_chainsaw" class="site-gif">
-            <p>Здесь могла быть ваша реклама!</p>
-            <button id="main-btn" class="btn">НАЖМИ МЕНЯ</button>
-        </div>
-    </main>
+    <header class="navbar">
+        <button class="nav-btn active" id="nav-signin">Sign-in</button>
+        <button class="nav-btn" id="nav-store">Adult Store</button>
+    </header>
 
-    <script src="./script.js"></script>
+    <!-- ЭКРАН 1: АВТОРИЗАЦИЯ -->
+    <div id="login-screen">
+        
+
+        <main class="main-card">
+            <div class="site-header">valiant video enterprises</div>
+
+            <div class="warning-box">
+                <span class="warning-badge">WARNING:</span>
+                <h2>THIS SITE IS FOR ADULTS ONLY<br>AND CONTAINS DISTURBING MATERIAL.</h2>
+            </div>
+
+            <form class="login-box" id="login-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="username">username:</label>
+                        <input type="text" id="username" autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">password:</label>
+                        <input type="password" id="password">
+                    </div>
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+                <p id="error-msg" class="error-text"></p>
+            </form>
+        </main>
+    </div>
+
+
+    <!-- ЭКРАН 2: СЕКРЕТНЫЙ КАТАЛОГ (ADULT STORE) -->
+    <div id="store-screen" class="hidden">
+        <main class="store-card">
+
+            <!-- Кнопка возврата/выхода -->
+            <div style="text-align: right; margin-bottom: 10px;">
+            <button id="logout-btn" class="nav-btn">← Sign-out / Return</button>
+            </div>
+
+
+            <h1 class="brand-title">valiant video enterprises</h1>
+            <h2 class="store-title">ADULT STORE</h2>
+            <p class="store-subtitle">SATISFACTION GUARANTEED</p>
+
+            <div class="store-warning">
+                <p>MEMBERS ONLY. IF YOU ARE NOT A MEMBER, PISS OFF!</p>
+                <p class="small-red">ALL MAJOR CREDIT CARDS ARE TAKEN. NO COD'S. NO PERSONAL CHECKS.</p>
+            </div>
+
+            <!-- СПИСОК ТОВАРОВ -->
+            <div class="products-list">
+
+                <!-- Товар 1 полиетиленовый пакет -->
+                <div class="product-item">
+                    <div class="product-info">
+                        <img src="assets/plastic_bag_vve.png" alt="Plastic Bag" class="product-img">
+                        <div class="product-desc">
+                            <h4>PLASTIC BAG</h4>
+                            <ul>
+                                <li>* Strong and durable</li>
+                                <li>* Easily folds away into pocket</li>
+                                <li>* Fits snugly over head</li>
+                                <li>* Pack of 3 in assorted colors eg: blue, pink...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-bar">
+                        <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
+                        <span>ITEM: NO.001</span>
+                        <span>PLASTIC BAG</span>
+                        <span>PRICE: $10</span>
+                        <button class="buy-btn">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Товар 2 латексные перчатки -->
+                <div class="product-item">
+                    <div class="product-info">
+                        <img src="assets/blue_latex_gloves_vve.png" alt="Latex Gloves" class="product-img">
+                        <div class="product-desc">
+                            <h4>LATEX GLOVES</h4>
+                            <ul>
+                                <li>* Strong and durable</li>
+                                <li>* Seam free</li>
+                                <li>* One size fits all</li>
+                                <li>* Strong odor of latex</li>
+                                <li>* Box of 20</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-bar">
+                        <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
+                        <span>ITEM: NO.002</span>
+                        <span>LATEX GLOVES</span>
+                        <span>PRICE: $9.99</span>
+                        <button class="buy-btn">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Товар 3 - бита -->
+                <div class="product-item">
+                    <div class="product-info">
+                        <img src="assets/wooden_bat_vve.png" alt="Wooden Bat" class="product-img">
+                        <div class="product-desc">
+                            <h4>WOODEN BAT</h4>
+                            <ul>
+                                <li>* Some are stained with blood and other fluids</li>
+                                <li>* Nice thing to own for Valiant fan</li>
+                                <li>* Signed by you know who</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-bar">
+                        <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
+                        <span>ITEM: NO.005</span>
+                        <span>WOODEN BAT</span>
+                        <span>PRICE: $130</span>
+                        <button class="buy-btn">Add to Cart</button>
+                    </div>
+                </div>
+                <!-- Товар: VHS Кассеты -->
+                <div class="product-item">
+                    <div class="product-info">
+                    <img src="assets/VHS_cassetes_vve.png" alt="PROF VHS NTSC" class="product-img">
+                    <div class="product-desc">
+                    <h4>PROFESSIONAL VHS NTSC TAPES 5HRS</h4>
+                <ul>
+                    <li>* Long lasting</li>
+                    <li>* Guaranteed for 5 years</li>
+                    <li>* Very Durable</li>
+                    <li>* Sold in bulk - 50 ct. carton</li>
+                </ul>
+                </div>
+            </div>
+    
+                <!-- Серый бар с характеристиками и кнопкой -->
+                <div class="product-bar">
+                    <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
+                    <span>ITEM: NO.004</span>
+                    <span>PROF VHS NTSC</span>
+                    <span>PRICE: $17.99</span>
+                    <button class="buy-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

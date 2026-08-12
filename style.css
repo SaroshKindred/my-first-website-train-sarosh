@@ -2,68 +2,346 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
 body {
-    background-color: #000000;
+    background-color: #2b2a29; /* Тёмно-серый общий фон */
     color: #ffffff;
-    font-family: 'Courier New', Courier, monospace;
-    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     padding: 20px;
 }
 
-.container {
-    font-family: serif;
-    text-align: center;
-    max-width: 600px;
+/* --- НАВИГАЦИЯ --- */
+.navbar {
+    display: flex;
+    gap: 8px;
     width: 100%;
+    max-width: 950px; /* Было 750px */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #8b0000;
+    padding-bottom: 10px;
 }
 
-.title {
-    font-size: 2rem;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
+.nav-btn {
+    background-color: #4a1313;  /* Тёмно-бордовый, тусклый цвет */
+    color: #888888;           /* Серый, слегка погасший текст */
+    border: 1px solid #4a0d0d;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.nav-btn.active {
+    background-color: #cc0000; /* Ярко-красный */
+    color: #ffffff;           /* Белый четкий текст */
+    border: 1px solid #ff3333;
+    box-shadow: 0 0 8px rgba(204, 0, 0, 0.6); /* Легкое свечение */
+}
+
+.nav-btn:hover {
+    background-color: #6e1c1c;
+    color: #ffffff;
+}
+
+/* --- ОСНОВНОЙ БЛОК --- */
+.main-card {
+    background-color: #000000;
+    width: 100%;
+    max-width: 950px; /* Было 700px/750px */
+    padding: 30px;    /* Немного добавим внутренних отступов */
+    border: 1px solid #333;
+    text-align: center;
+    color: #fff;
+}
+
+.site-header {
+    color: #d61111;
+    font-family: monospace;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+/* --- ПРЕДУПРЕЖДЕНИЯ --- */
+.warning-badge {
+    background-color: #cc0000;
+    color: #fff;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.warning-box h2 {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin: 10px 0 5px;
+    line-height: 1.3;
+}
+
+.sub-warning {
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.agree-text {
+    color: #cc0000;
+    font-style: italic;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+}
+
+/* --- БАННЕР / ГЛИТЧ --- */
+.banner {
+    width: 100%;
+    height: 180px;
+    background: repeating-linear-gradient(
+        0deg,
+        #1a1a1a,
+        #1a1a1a 2px,
+        #0d0d0d 2px,
+        #0d0d0d 4px
+    ); /* Эффект сканирующих линий CRT */
+    border: 1px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-overlay span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-style: italic;
     color: #ff3333;
+    text-shadow: 2px 2px 4px #000;
+    letter-spacing: 2px;
 }
 
-.description {
-    color: #888;
+/* --- БЛОК УСЛОВИЙ --- */
+.terms-box {
+    border: 1px solid #333;
+    text-align: left;
+    padding: 12px;
+    margin-bottom: 25px;
+    background-color: #050505;
+}
+
+.terms-box h3 {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-bottom: 8px;
+}
+
+.terms-box p {
+    font-size: 0.7rem;
+    color: #777;
+    line-height: 1.4;
+}
+
+/* --- ФОРМА ВХОДА --- */
+.login-box {
+    background-color: #5a5a5a; /* Серый прямоугольник */
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    color: #000;
+    text-align: left;
+}
+
+.form-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 4px;
+}
+
+.input-group input {
+    padding: 4px;
+    border: 1px solid #000;
+    width: 150px;
+}
+
+.login-btn {
+    padding: 4px 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #000;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.login-btn:hover {
+    background-color: #fff;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* --- ФУТЕР --- */
+.site-footer {
+    font-size: 0.65rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* Вспомогательный класс для скрытия элементов */
+.hidden {
+    display: none !important;
+}
+
+.error-text {
+    color: #ff3333;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* --- СТИЛИ ДЛЯ КАТАЛОГА (STORE) --- */
+.store-card {
+    background-color: #000000;
+    width: 100%;
+    max-width: 950px; /* Было 700px/750px */
+    padding: 30px;    /* Немного добавим внутренних отступов */
+    border: 1px solid #333;
+    text-align: center;
+    color: #fff;
+}
+
+.brand-title {
+    color: #cc0000;
+    font-family: 'Impact', sans-serif;
+    letter-spacing: 2px;
+    font-size: 2.2rem;
+}
+
+.store-title {
+    font-size: 2.5rem;
+    margin-top: 10px;
+}
+
+.store-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.store-warning {
+    color: #cc0000;
+    font-size: 0.8rem;
+    font-weight: bold;
     margin-bottom: 30px;
 }
 
-.card {
-    border: 1px solid #333;
-    padding: 30px;
-    background-color: #141414;
-    border-radius: 4px;
+.small-red {
+    font-size: 0.7rem;
+    margin-top: 5px;
 }
 
-.btn {
-    margin-top: 20px;
-    background: transparent;
-    color: #bfbfbf;
-    border: 1px solid #000000;
-    padding: 10px 20px;
-    font-family: serif;
-    font-size: 1rem;
+/* Карточка товара */
+.product-item {
+    background-color: #fff;
+    color: #000;
+    margin-bottom: 20px;
+    border: 1px solid #999;
+    text-align: left;
+}
+
+.product-info {
+    display: flex;
+    padding: 15px;
+    gap: 20px;
+}
+
+.product-img-placeholder {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border: 1px dashed #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #666;
+}
+
+.product-desc h4 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.product-desc ul {
+    list-style: none;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* Серый плашка управления товаром */
+.product-bar {
+    background-color: #ccc;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-top: 1px solid #aaa;
+}
+
+.buy-btn {
+    background-color: #eee;
+    border: 1px solid #000;
+    padding: 4px 10px;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
-.btn:hover {
-    background-color: #44ff00;
-    color: #ffffff;
-    box-shadow: 0 0 10px #545454;
+.buy-btn:hover {
+    background-color: #fff;
 }
 
-.site-gif {
-    max-width: 100%;       /* Гифка не выйдет за пределы контейнера */
-    height: auto;          /* Сохраняет пропорции */
-    display: block;        /* Убирает лишние отступы снизу */
-    margin: 0 auto 20px;   /* Центрирует гифку и делает отступ снизу 20px */
-    border-radius: 4px;    /* Слегка закругляет углы */
-    border: 1px solid #333; /* Тёмная рамка вокруг гифки */
+/* Настройки для картинок товаров */
+.product-img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+    background-color: #fff;
+    border: 1px solid #999;
+    padding: 3px;
+    /* Эффект ретро-фотографии: ч/б и контраст */
+    filter: grayscale(100%) contrast(120%);
+}
+
+.qty-input {
+    width: 45px;           /* Компактная ширина */
+    padding: 2px 4px;      /* Внутренние отступы */
+    border: 1px solid #666;/* Серый кантик */
+    background-color: #fff;
+    font-size: 0.75rem;
+    text-align: center;    /* Выравнивание цифры по центру */
 }
