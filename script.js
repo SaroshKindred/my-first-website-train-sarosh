@@ -1,48 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Находим экраны
-    const loginScreen = document.getElementById('login-screen');
-    const storeScreen = document.getElementById('store-screen');
+    const isLoginPage = !!document.getElementById('login-form');
+    const isStorePage = !!document.querySelector('.store-card');
 
-    // Находим элементы формы
-    const loginForm = document.getElementById('login-form');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const errorMsg = document.getElementById('error-msg');
-
-    // Находим кнопки навигации
     const navSignin = document.getElementById('nav-signin');
     const navStore = document.getElementById('nav-store');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // Функция переключения активной вкладки
-    function showScreen(screenToShow) {
-        if (screenToShow === 'login') {
-            loginScreen.classList.remove('hidden');
-            storeScreen.classList.add('hidden');
+    const urlParams = new URLSearchParams(window.location.search);
 
-            // Подсветка кнопок
-            navSignin.classList.add('active');
-            navStore.classList.remove('active');
-        } else if (screenToShow === 'store') {
-            loginScreen.classList.add('hidden');
-            storeScreen.classList.remove('hidden');
+    // ВАЖНО: Если пользователь зашел на страницу входа (index.html) — сбрасываем авторизацию!
+    if (isLoginPage) {
+        localStorage.removeItem('isLoggedIn');
+    }
 
-            // Подсветка кнопок
-            navStore.classList.add('active');
-            navSignin.classList.remove('active');
+    // 1. ЗАЩИТА СТРАНИЦЫ МАГАЗИНА (store.html)
+    if (isStorePage) {
+        const isAuth = urlParams.get('auth') === 'true' || localStorage.getItem('isLoggedIn') === 'true';
+        if (!isAuth) {
+            // Если не авторизован — выкидываем на index.html
+            window.location.href = 'index.html';
+            return;
         }
     }
 
-    // 1. Успешный вход через форму
-    if (loginForm) {
+    // 2. ФОРМА ВХОДА (index.html)
+    if (isLoginPage) {
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMsg = document.getElementById('error-msg');
+
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
 
             if (username === "Starkweather" && password === "nastyscum") {
-                showScreen('store');
-                errorMsg.textContent = '';
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'store.html?auth=true';
             } else {
                 errorMsg.textContent = "ACCESS DENIED: Invalid credentials";
                 passwordInput.value = "";
@@ -50,26 +46,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Клик по верхней кнопке "Sign-in"
+    // 3. НАВИГАЦИЯ В ВЕРХНЕМ МЕНЮ
     if (navSignin) {
         navSignin.addEventListener('click', () => {
-            showScreen('login');
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'index.html';
         });
     }
 
-    // 3. Клик по верхней кнопке "Adult Store"
     if (navStore) {
         navStore.addEventListener('click', () => {
-            showScreen('store');
+            // Проверяем статус входа прямо в момент клика
+            const isAuth = urlParams.get('auth') === 'true' || localStorage.getItem('isLoggedIn') === 'true';
+
+            if (isAuth) {
+                window.location.href = 'store.html?auth=true';
+            } else {
+                if (isLoginPage) {
+                    const errorMsg = document.getElementById('error-msg');
+                    if (errorMsg) {
+                        errorMsg.textContent = "ACCESS DENIED: Please login first!";
+                    }
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
         });
     }
 
-    // 4. Клик по кнопке "Sign-out / Return" внутри магазина
+    // 4. КНОПКА SIGN-OUT
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            showScreen('login');
-            usernameInput.value = '';
-            passwordInput.value = '';
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'index.html';
         });
     }
 });
