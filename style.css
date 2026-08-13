@@ -496,3 +496,74 @@ body {
   color: #000;
   box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
 }
+
+.cart-summary {
+  background: #111;
+  border: 2px solid #333;
+  padding: 15px;
+  width: 320px;
+  color: #eee;
+  font-family: 'Courier New', monospace;
+}
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.promo-box {
+  display: flex;
+  gap: 5px;
+  margin: 12px 0;
+}
+
+.promo-box input {
+  background: #000;
+  border: 1px solid #444;
+  color: #33ff33;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  text-transform: uppercase;
+  flex-grow: 1;
+}
+
+.promo-box button {
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.promo-box button:hover {
+  background: #33ff33;
+  color: #000;
+}
+
+.promo-msg {
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.promo-msg.success { color: #33ff33; }
+.promo-msg.error { color: #ff3333; }
+
+.discount-row {
+  color: #ffcc00;
+}
+
+.divider {
+  border: none;
+  border-top: 1px dashed #444;
+  margin: 10px 0;
+}
+
+.total-row {
+  font-weight: bold;
+  font-size: 16px;
+  color: #33ff33;
+}

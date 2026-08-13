@@ -8,7 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    // ВАЖНО: При заходе на index.html — всегда очищаем сессию
+    // База доступных промокодов Valiant Video
+    const PROMO_CODES = {
+        'DISCOUNT-1997': { type: 'percent', value: 13, name: 'Скидка Valiant Club 13%' },
+        'SNUFF10':       { type: 'percent', value: 10, name: 'Скидка 10%' },
+        'STARKWEATHER':  { type: 'percent', value: 20, name: 'Специальный доступ 20%' },
+        'MRNASTY':       { type: 'fixed',   value: 50, name: 'Скидка $50' }
+    };
+
+    let currentDiscountPercent = 0;
+    let currentFixedDiscount = 0;
+
+    // При заходе на index.html — всегда очищаем сессию
     if (isLoginPage) {
         localStorage.removeItem('isLoggedIn');
     }
@@ -88,11 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const cartCount = document.getElementById('cart-count');
         const placeOrderBtn = document.getElementById('place-order-btn');
         const checkoutMsg = document.getElementById('checkout-msg');
+        
+        const applyPromoBtn = document.getElementById('apply-promo-btn');
 
-        // Функция отрисовки содержимого корзины
+        // Функция отрисовки содержимого корзины с учетом скидок
         function renderCart() {
             cartItemsBody.innerHTML = '';
-            let totalSum = 0;
+            let subtotalSum = 0;
             let totalCount = 0;
 
             if (cart.length === 0) {
@@ -100,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 cart.forEach((item, index) => {
                     const itemTotal = item.price * item.qty;
-                    totalSum += itemTotal;
+                    subtotalSum += itemTotal;
                     totalCount += item.qty;
 
                     const row = document.createElement('tr');
@@ -115,9 +128,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            cartTotalPrice.textContent = `$${totalSum.toFixed(2)}`;
+            // --- РАСЧЕТ СКИДКИ ---
+            let discountAmount = 0;
+            if (currentDiscountPercent > 0) {
+                discountAmount = (subtotalSum * currentDiscountPercent) / 100;
+            } else if (currentFixedDiscount > 0) {
+                discountAmount = currentFixedDiscount;
+            }
+
+            if (discountAmount > subtotalSum) {
+                discountAmount = subtotalSum;
+            }
+
+            let finalTotal = subtotalSum - discountAmount;
+
+            // --- ОБНОВЛЕНИЕ UI СУММ ---
+            const subtotalBar = document.getElementById('subtotal-bar');
+            const subtotalPriceEl = document.getElementById('subtotal-price');
+            const discountRow = document.getElementById('discount-row');
+            const discountPercentEl = document.getElementById('discount-percent');
+            const discountAmountEl = document.getElementById('discount-amount');
+
+            if (discountAmount > 0 && subtotalSum > 0) {
+                if (subtotalBar) subtotalBar.style.display = 'flex';
+                if (subtotalPriceEl) subtotalPriceEl.textContent = `$${subtotalSum.toFixed(2)}`;
+
+                if (discountRow) discountRow.style.display = 'flex';
+                if (discountPercentEl) discountPercentEl.textContent = currentDiscountPercent > 0 ? `${currentDiscountPercent}%` : 'FIXED';
+                if (discountAmountEl) discountAmountEl.textContent = `-$${discountAmount.toFixed(2)}`;
+            } else {
+                if (subtotalBar) subtotalBar.style.display = 'none';
+                if (discountRow) discountRow.style.display = 'none';
+            }
+
+            cartTotalPrice.textContent = `$${finalTotal.toFixed(2)}`;
             cartCount.textContent = totalCount;
             localStorage.setItem('userCart', JSON.stringify(cart));
+        }
+
+        // Применение промокода
+        function applyPromoCode() {
+            const input = document.getElementById('promo-input');
+            const msg = document.getElementById('promo-message');
+
+            if (!input || !msg) return;
+
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                msg.style.color = '#ff3333';
+                msg.innerText = 'ENTER PROMO CODE!';
+                return;
+            }
+
+            if (PROMO_CODES[code]) {
+                const promo = PROMO_CODES[code];
+
+                if (promo.type === 'percent') {
+                    currentDiscountPercent = promo.value;
+                    currentFixedDiscount = 0;
+                } else if (promo.type === 'fixed') {
+                    currentFixedDiscount = promo.value;
+                    currentDiscountPercent = 0;
+                }
+
+                msg.style.color = '#33ff33';
+                msg.innerText = `CODE ACTIVATED: ${promo.name}`;
+
+                renderCart();
+            } else {
+                msg.style.color = '#ff3333';
+                msg.innerText = 'INVALID OR EXPIRED CODE!';
+            }
+        }
+
+        // Вешаем событие на кнопку промокода
+        if (applyPromoBtn) {
+            applyPromoBtn.addEventListener('click', applyPromoCode);
         }
 
         // Добавление товара
@@ -138,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 renderCart();
 
-                // Эффект подсвечивания кнопки
                 const originalText = btn.textContent;
                 btn.textContent = 'ADDED!';
                 btn.style.backgroundColor = '#00aa00';
@@ -158,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Оформление заказа (косметический сабмит)
+        // Оформление заказа
         if (placeOrderBtn) {
             placeOrderBtn.addEventListener('click', () => {
                 const msgBox = document.getElementById('msg-box').value.trim();
@@ -176,12 +262,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // Успешный косметический «заказ»
                 checkoutMsg.style.color = '#00ff00';
                 checkoutMsg.textContent = `ORDER RECEIVED! DISPATCHED TO ${msgBox.toUpperCase()}. WE KNOW WHERE YOU LIVE.`;
 
-                // Очищаем корзину и инпуты
                 cart = [];
+                currentDiscountPercent = 0;
+                currentFixedDiscount = 0;
+                document.getElementById('promo-input').value = '';
+                document.getElementById('promo-message').innerText = '';
+
                 renderCart();
                 document.getElementById('msg-box').value = '';
                 document.getElementById('delivery-address').value = '';
