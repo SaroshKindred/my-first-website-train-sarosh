@@ -19,6 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentDiscountPercent = 0;
     let currentFixedDiscount = 0;
 
+    // Посимвольная печать текста (тип-эффект терминала)
+    function typeMessage(el, text, speed = 25, done) {
+        el.textContent = "";
+        let i = 0;
+        const timer = setInterval(() => {
+            el.textContent += text[i];
+            i++;
+            if (i >= text.length) {
+                clearInterval(timer);
+                if (done) done();
+            }
+        }, speed);
+    }
+
+    // Краткий сдвиг кадров (глитч) на блоке
+    function triggerGlitch(el) {
+        if (!el) return;
+        el.classList.remove('glitching');
+        void el.offsetWidth; // рестарт CSS-анимации
+        el.classList.add('glitching');
+    }
+
     // При заходе на index.html — всегда очищаем сессию
     if (isLoginPage) {
         sessionStorage.removeItem('isLoggedIn');
@@ -49,12 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const username = usernameInput.value.trim();
             const password = passwordInput.value.trim();
 
+            // Глитч-сдвиг кадров при нажатии LOGIN
+            triggerGlitch(document.querySelector('.main-card'));
+
             if (username === "Starkweather" && password === "nastyscum") {
                 sessionStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'store.html?auth=true';
+                setTimeout(() => {
+                    window.location.href = 'store.html?auth=true';
+                }, 550);
             } else {
-                errorMsg.textContent = "ACCESS DENIED: Invalid credentials";
                 passwordInput.value = "";
+                typeMessage(errorMsg, "ACCESS DENIED: Invalid credentials");
             }
         });
     }
@@ -74,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'store.html?auth=true';
             } else if (isLoginPage) {
                 const errorMsg = document.getElementById('error-msg');
-                if (errorMsg) errorMsg.textContent = "ACCESS DENIED: Please login first!";
+                if (errorMsg) typeMessage(errorMsg, "ACCESS DENIED: Please login first!");
             } else {
                 window.location.href = 'index.html';
             }

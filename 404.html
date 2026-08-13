@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valiant Video Enterprises - Error 404</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #33ff33;
+            font-family: 'Courier New', monospace;
+        }
+
+        .term-card {
+            background: #020802;
+            border: 2px solid #0a2a0a;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 720px;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.12), inset 0 0 30px rgba(0, 255, 0, 0.05);
+            position: relative;
+        }
+
+        .term-header {
+            color: #888;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .rec {
+            color: #ff3333;
+        }
+
+        .rec::before {
+            content: "● ";
+            animation: blink 1s steps(1) infinite;
+        }
+
+        .err-code {
+            color: #ff3333;
+            font-size: 3rem;
+            text-align: center;
+            letter-spacing: 4px;
+            text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+            margin: 10px 0 20px;
+            line-height: 1;
+        }
+
+        .term-body {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            min-height: 150px;
+        }
+
+        .term-cursor {
+            display: inline-block;
+            width: 9px;
+            height: 1.1em;
+            background: #33ff33;
+            vertical-align: text-bottom;
+            animation: blink 0.9s steps(1) infinite;
+        }
+
+        .term-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .term-btn {
+            background: #061406;
+            color: #33ff33;
+            border: 1px solid #1a3a1a;
+            padding: 8px 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .term-btn:hover {
+            background: #33ff33;
+            color: #000;
+            box-shadow: 0 0 12px rgba(51, 255, 51, 0.5);
+        }
+
+        .term-btn-red {
+            border-color: #5a1414;
+            color: #ff5555;
+            background: #140404;
+        }
+
+        .term-btn-red:hover {
+            background: #ff3333;
+            color: #000;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+        }
+
+        .muted {
+            color: #445544;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="term-card">
+        <div class="term-header">
+            <span>VALIANT VIDEO ENTERPRISES :: ERROR TERMINAL</span>
+            <span class="rec">REC</span>
+        </div>
+
+        <div class="err-code">ERROR 404</div>
+
+        <div class="term-body" id="term-body"></div>
+
+        <div class="term-actions">
+            <a href="index.html" class="term-btn term-btn-red">[ SIGN-IN ]</a>
+            <a href="hotline.html" class="term-btn">[ HOTLINE ]</a>
+            <a href="index.html" class="term-btn muted">[ REBOOT ]</a>
+        </div>
+    </div>
+
+    <script>
+        const lines = [
+            "> ERROR 404 : MEMBER NOT FOUND",
+            "",
+            "> THE REQUESTED TAPE HAS BEEN EJECTED,",
+            "> OR IT NEVER EXISTED IN THE FIRST PLACE.",
+            "",
+            "> POSSIBLE CAUSES:",
+            ">   - WRONG ADDRESS (A.K.A. WRONG DOOR)",
+            ">   - RECORDING OVERWRITTEN / TAPE REUSED",
+            ">   - YOU WERE NOT SUPPOSED TO SEE THIS.",
+            "",
+            "> DO NOT REPORT THIS ERROR.",
+            "> IT WILL BE HANDLED INTERNALLY."
+        ];
+
+        const termBody = document.getElementById('term-body');
+
+        function typeTerminal(lines, done) {
+            termBody.textContent = "";
+            let lineIndex = 0;
+
+            function nextLine() {
+                if (lineIndex >= lines.length) {
+                    const cursor = document.createElement('span');
+                    cursor.className = 'term-cursor';
+                    termBody.appendChild(cursor);
+                    if (done) done();
+                    return;
+                }
+
+                const line = lines[lineIndex];
+                const lineEl = document.createElement('div');
+                termBody.appendChild(lineEl);
+
+                let i = 0;
+                const timer = setInterval(() => {
+                    lineEl.textContent += line[i];
+                    i++;
+                    if (i >= line.length) {
+                        clearInterval(timer);
+                        lineIndex++;
+                        setTimeout(nextLine, 150);
+                    }
+                }, 16);
+            }
+
+            nextLine();
+        }
+
+        typeTerminal(lines);
+    </script>
+
+</body>
+</html>
