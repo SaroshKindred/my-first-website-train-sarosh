@@ -21,12 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // При заходе на index.html — всегда очищаем сессию
     if (isLoginPage) {
-        localStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('isLoggedIn');
     }
 
     // 1. ЗАЩИТА СТРАНИЦЫ МАГАЗИНА
     if (isStorePage) {
-        const isAuth = urlParams.get('auth') === 'true' || localStorage.getItem('isLoggedIn') === 'true';
+        const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
         if (!isAuth) {
             window.location.href = 'index.html';
             return;
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = passwordInput.value.trim();
 
             if (username === "Starkweather" && password === "nastyscum") {
-                localStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('isLoggedIn', 'true');
                 window.location.href = 'store.html?auth=true';
             } else {
                 errorMsg.textContent = "ACCESS DENIED: Invalid credentials";
@@ -62,14 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. НАВИГАЦИЯ В ХЕДЕРЕ
     if (navSignin) {
         navSignin.addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('isLoggedIn');
             window.location.href = 'index.html';
         });
     }
 
     if (navStore) {
         navStore.addEventListener('click', () => {
-            const isAuth = urlParams.get('auth') === 'true' || localStorage.getItem('isLoggedIn') === 'true';
+            const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
             if (isAuth) {
                 window.location.href = 'store.html?auth=true';
             } else if (isLoginPage) {
@@ -84,14 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. КНОПКА SIGN-OUT
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('isLoggedIn');
             window.location.href = 'index.html';
         });
     }
 
     // ================= ЛОГИКА КОРЗИНЫ =================
     function initCart() {
-        let cart = JSON.parse(localStorage.getItem('userCart')) || [];
+        
+        // Корзина просто в памяти JS (при F5 или закрытии сразу сбрасывается)
+        let cart = [];
 
         const buyButtons = document.querySelectorAll('.buy-btn');
         const cartItemsBody = document.getElementById('cart-items-body');
@@ -163,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             cartTotalPrice.textContent = `$${finalTotal.toFixed(2)}`;
             cartCount.textContent = totalCount;
-            localStorage.setItem('userCart', JSON.stringify(cart));
+            
         }
 
         // Применение промокода

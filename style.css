@@ -2,7 +2,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+    font-family: 'VT323', 'Courier New', monospace;
+}
+
+html {
+    font-size: 20px; /* VT323 пиксельный и мелкий — поднимаем базу */
 }
 
 body {
@@ -12,6 +16,47 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+}
+
+/* --- CRT-ОВЕРЛЕЙ ПОВЕРХ ВСЕГО САЙТА --- */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.18) 2px,
+        rgba(0, 0, 0, 0.18) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.45) 100%);
+    pointer-events: none;
+    z-index: 9998;
+    animation: crt-flicker 5s infinite;
+}
+
+@keyframes crt-flicker {
+    0%, 100% { opacity: 1; }
+    91%      { opacity: 1; }
+    92%      { opacity: 0.65; }
+    93%      { opacity: 1; }
+    96%      { opacity: 0.8; }
+    97%      { opacity: 1; }
 }
 
 /* --- НАВИГАЦИЯ --- */
@@ -60,7 +105,7 @@ body {
 
 .site-header {
     color: #d61111;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;
     font-size: 1.1rem;
     margin-bottom: 25px;
 }
@@ -367,7 +412,7 @@ body {
     border: 2px solid #cc0000;
     padding: 20px;
     color: #ccc;
-    font-family: monospace, sans-serif;
+    font-family: 'Courier New', monospace;
 }
 
 .cart-title {
@@ -446,7 +491,7 @@ body {
     border: 1px solid #666;
     color: #00ff00; /* Ретро зеленый текст */
     padding: 8px;
-    font-family: monospace;
+    font-family: 'Courier New', monospace;
     font-size: 1rem;
 }
 
@@ -523,7 +568,7 @@ body {
   border: 1px solid #444;
   color: #33ff33;
   padding: 6px 10px;
-  font-family: inherit;
+  font-family: 'Courier New', monospace;
   font-size: 13px;
   text-transform: uppercase;
   flex-grow: 1;

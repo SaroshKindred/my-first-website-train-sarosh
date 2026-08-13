@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valiant Video Enterprises - Adult Store</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,9 +21,9 @@
     <main class="store-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
             <div>
-                <a href="#cart-section" class="cart-shortcut">🛒 CART (<span id="cart-count">0</span>)</a>
+                <a href="#cart-section" class="cart-shortcut">[ CART (<span id="cart-count">0</span>) ]</a>
                 <!-- Добавлена кнопка перехода к пейджеру / горячей линии -->
-                <a href="hotline.html" class="cart-shortcut" style="margin-left: 15px;">📟 HOTLINE</a>
+                <a href="hotline.html" class="cart-shortcut" style="margin-left: 15px;">[ HOTLINE ]</a>
             </div>
             <button id="logout-btn" class="nav-btn">← Sign-out / Return</button>
         </div>
@@ -143,10 +147,10 @@
             <!-- ВСТАВЛЕННЫЙ БЛОК: Поле ввода промокода -->
             <div class="promo-section" style="margin: 15px 0; display: flex; flex-direction: column; gap: 5px;">
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" id="promo-input" placeholder="ENTER PROMO CODE" style="background: #000; border: 1px solid #444; color: #33ff33; padding: 6px 10px; font-family: monospace; text-transform: uppercase; flex-grow: 1;">
-                    <button type="button" id="apply-promo-btn" onclick="applyPromoCode()" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px 12px; cursor: pointer; font-family: monospace;">APPLY</button>
+                    <input type="text" id="promo-input" placeholder="ENTER PROMO CODE" style="background: #000; border: 1px solid #444; color: #33ff33; padding: 6px 10px; font-family: 'Courier New', monospace; text-transform: uppercase; flex-grow: 1;">
+                    <button type="button" id="apply-promo-btn" style="background: #222; color: #fff; border: 1px solid #555; padding: 6px 12px; cursor: pointer; font-family: 'Courier New', monospace;">APPLY</button>
                 </div>
-                <div id="promo-message" style="font-size: 11px; font-family: monospace;"></div>
+                <div id="promo-message" style="font-size: 11px; font-family: 'Courier New', monospace;"></div>
             </div>
 
             <!-- Строка промежуточной суммы и скидки -->
