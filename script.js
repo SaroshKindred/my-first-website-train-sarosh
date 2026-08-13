@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const isLoginPage = !!document.getElementById('login-form');
-    const isStorePage = !!document.querySelector('.store-card');
+    const isStorePage = !!document.getElementById('cart-items-body');
+    const isServicesPage = !!document.querySelector('.services-card');
+    const isForumPage = !!document.getElementById('bbs-posts');
 
     const navSignin = document.getElementById('nav-signin');
     const navStore = document.getElementById('nav-store');
+    const navServices = document.getElementById('nav-services');
+    const navForum = document.getElementById('nav-forum');
     const logoutBtn = document.getElementById('logout-btn');
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -58,6 +62,30 @@ document.addEventListener('DOMContentLoaded', () => {
         initCart();
     }
 
+    // 1a. ЗАЩИТА СТРАНИЦЫ УСЛУГ
+    if (isServicesPage) {
+        const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
+        if (!isAuth) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Инициализация лотов услуг
+        initServices();
+    }
+
+    // 1b. ЗАЩИТА СТРАНИЦЫ ФОРУМА
+    if (isForumPage) {
+        const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
+        if (!isAuth) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Инициализация гостевой книги
+        initForum();
+    }
+
     // 2. ФОРМА ВХОДА (index.html)
     if (isLoginPage) {
         const loginForm = document.getElementById('login-form');
@@ -102,6 +130,34 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (isLoginPage) {
                 const errorMsg = document.getElementById('error-msg');
                 if (errorMsg) typeMessage(errorMsg, "ACCESS DENIED: Please login first!");
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    }
+
+    if (navServices) {
+        navServices.addEventListener('click', () => {
+            const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
+            if (isAuth) {
+                window.location.href = 'services.html?auth=true';
+            } else if (isLoginPage) {
+                const errorMsg = document.getElementById('error-msg');
+                if (errorMsg) typeMessage(errorMsg, "ACCESS DENIED: Members only!");
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    }
+
+    if (navForum) {
+        navForum.addEventListener('click', () => {
+            const isAuth = urlParams.get('auth') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true';
+            if (isAuth) {
+                window.location.href = 'forum.html?auth=true';
+            } else if (isLoginPage) {
+                const errorMsg = document.getElementById('error-msg');
+                if (errorMsg) typeMessage(errorMsg, "ACCESS DENIED: Members only!");
             } else {
                 window.location.href = 'index.html';
             }
@@ -308,5 +364,196 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Запуск при старте
         renderCart();
+    }
+
+    // ================= ЛОГИКА УСЛУГ (SERVICES) =================
+    function initServices() {
+
+        // Кнопки HIRE
+        document.querySelectorAll('.hire-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const originalText = btn.textContent;
+                btn.textContent = 'CONFIRMED';
+                btn.classList.add('hire-btn-active');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('hire-btn-active');
+                }, 1200);
+            });
+        });
+
+        // Форма запроса услуги
+        const submitBtn = document.getElementById('req-submit-btn');
+        const output = document.getElementById('req-msg-out');
+
+        if (submitBtn && output) {
+            submitBtn.addEventListener('click', () => {
+                const name = document.getElementById('req-name').value.trim();
+                const pager = document.getElementById('req-pager').value.trim();
+                const lot = document.getElementById('req-lot').value.trim();
+
+                if (!name || !pager || !lot) {
+                    output.style.color = '#ffaa00';
+                    output.textContent = 'FILL IN ALL FIELDS, MEMBER!';
+                    return;
+                }
+
+                output.style.color = '#00ff00';
+                typeMessage(output, `REQUEST RECEIVED. LOT ${lot.toUpperCase()} ASSIGNED. OUR HUNTERS WILL PAGE ${pager.toUpperCase()}. DO NOT CALL US.`);
+
+                document.getElementById('req-name').value = '';
+                document.getElementById('req-pager').value = '';
+                document.getElementById('req-lot').value = '';
+                document.getElementById('req-msg').value = '';
+            });
+        }
+    }
+
+    // ================= ЛОГИКА ФОРУМА (GUESTBOOK / BBS) =================
+    function initForum() {
+        const STORAGE_KEY = 'vve_guestbook_posts';
+        const MODERATOR_NICKS = ['VALIANT', 'MANAGEMENT'];
+
+        // Первичные посты, если в хранилище пусто
+        function seedPosts() {
+            const now = Date.now();
+            const min = 60 * 1000;
+            return [
+                {
+                    nick: 'MANAGEMENT',
+                    text: 'WELCOME TO THE VALIANT VIDEO BULLETIN BOARD.\nLEAVE YOUR ORDERS. LEAVE YOUR HATE. LEAVE NOTHING ELSE.\nTHE BOARD IS ALWAYS WATCHED. — MANAGEMENT',
+                    ts: now - 3 * min,
+                    mod: true
+                },
+                {
+                    nick: 'PIG_FODDER',
+                    text: 'anyone got the number for the wardogs? got a runner that needs pacifying. got the cash. no questions asked, no questions answered.',
+                    ts: now - 2 * min,
+                    mod: false
+                },
+                {
+                    nick: 'REGULAR_DUST',
+                    text: 'saw a tape the other night. you know the one. the guy in the corner lot. the sound stayed with me all week. keep up the good product, management.',
+                    ts: now - 1 * min,
+                    mod: false
+                }
+            ];
+        }
+
+        function loadPosts() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                }
+            } catch (e) {}
+            const seeded = seedPosts();
+            savePosts(seeded);
+            return seeded;
+        }
+
+        function savePosts(posts) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            } catch (e) {}
+        }
+
+        function formatTime(ts) {
+            const d = new Date(ts);
+            const p = (n) => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+        }
+
+        function renderPosts(posts) {
+            const container = document.getElementById('bbs-posts');
+            const countEl = document.getElementById('bbs-count');
+            const lastEl = document.getElementById('bbs-last');
+
+            container.innerHTML = '';
+
+            countEl.textContent = posts.length;
+            lastEl.textContent = posts.length ? posts[posts.length - 1].nick : '-';
+
+            if (posts.length === 0) {
+                container.innerHTML = `<div class="bbs-empty">NO POSTS. THE BOARD IS EMPTY. LIKE YOUR FUTURE.</div>`;
+                return;
+            }
+
+            posts.forEach((post, idx) => {
+                const isMod = post.mod || MODERATOR_NICKS.includes(String(post.nick).toUpperCase());
+
+                const el = document.createElement('div');
+                el.className = 'bbs-post';
+
+                const meta = document.createElement('div');
+                meta.className = 'bbs-post-meta';
+
+                const nick = document.createElement('span');
+                nick.className = 'bbs-post-nick' + (isMod ? ' moderator' : '');
+                nick.textContent = isMod ? `★ ${post.nick}` : `» ${post.nick}`;
+
+                const stamp = document.createElement('span');
+                stamp.textContent = `#${String(idx + 1).padStart(3, '0')} :: ${formatTime(post.ts)}`;
+
+                meta.appendChild(nick);
+                meta.appendChild(stamp);
+
+                const body = document.createElement('div');
+                body.className = 'bbs-post-text';
+                body.textContent = post.text;
+
+                el.appendChild(meta);
+                el.appendChild(body);
+
+                if (isMod) {
+                    const flag = document.createElement('div');
+                    flag.className = 'bbs-mod-flag';
+                    flag.textContent = '● MODERATED BY VALIANT';
+                    el.appendChild(flag);
+                }
+
+                container.appendChild(el);
+            });
+        }
+
+        let posts = loadPosts();
+        renderPosts(posts);
+
+        // Фейковое число онлайн
+        const onlineEl = document.getElementById('bbs-online');
+        if (onlineEl) {
+            onlineEl.textContent = 3 + Math.floor(Math.random() * 17);
+        }
+
+        // Публикация поста
+        const postBtn = document.getElementById('bbs-post-btn');
+        const nickInput = document.getElementById('bbs-nick');
+        const textInput = document.getElementById('bbs-text');
+        const msgEl = document.getElementById('bbs-msg');
+
+        if (postBtn && nickInput && textInput) {
+            postBtn.addEventListener('click', () => {
+                const nick = nickInput.value.trim().toUpperCase() || 'ANON';
+                const text = textInput.value.trim();
+
+                if (!text) {
+                    msgEl.style.color = '#ffcc00';
+                    msgEl.textContent = 'ERROR: MESSAGE REQUIRED!';
+                    return;
+                }
+
+                const isMod = MODERATOR_NICKS.includes(nick);
+                posts.push({ nick, text, ts: Date.now(), mod: isMod });
+                savePosts(posts);
+                renderPosts(posts);
+
+                textInput.value = '';
+                nickInput.value = '';
+
+                msgEl.style.color = '#33ff33';
+                typeMessage(msgEl, `POST RECEIVED. THANKS FOR SHARING, ${nick}.`);
+            });
+        }
     }
 });

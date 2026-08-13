@@ -136,6 +136,7 @@
 
 <script>
   let currentInput = "";
+  let dialState = null; // для многошаговых диалогов
   const display = document.getElementById('display');
 
   // Звуковой синтезатор
@@ -174,28 +175,76 @@
     display.innerText = "CONNECTING...";
 
     setTimeout(() => {
-      // 1. Проверка на 911
-      if (currentInput === "911") {
-        playTone(150, 'sawtooth', 0.5); // Низкий тревожный звук
-        typeText("!!! WARNING !!!\nLINE INTERCEPTED\nCOMMUNICATION IS BLOCKED");
-      } 
-      // 2. Проверка на номер Starkweather (1900 или 900)
-      else if (currentInput.includes("1900") || currentInput.includes("900")) {
-        typeText("> VALIANT VIDEO ENTERPRISES\n> LEAVE YOUR ORDER AFTER THE BEEP.\n> PRICE: $2.99/MIN.\n> WE KNOW WHERE YOU LIVE.");
-      } 
-      // 3. Пасхалка на 666
-      else if (currentInput === "666") {
+      const n = currentInput;
+
+      // 1. 911 — перехват линии
+      if (n === "911") {
+        playTone(150, 'sawtooth', 0.5);
+        if (dialState === "cash") {
+          typeText("!!! WARNING !!!\nLINE INTERCEPTED\n> THEY'RE TRACING YOU, CASH.\n> BURN THE PHONE.");
+        } else {
+          typeText("!!! WARNING !!!\nLINE INTERCEPTED\nCOMMUNICATION IS BLOCKED");
+        }
+      }
+      // 2. Горячая линия Starkweather (1900 / 900)
+      else if (n.includes("1900") || n.includes("900")) {
+        if (dialState === "cash") {
+          typeText("> YOUR VOICE IS RESERVED\n> FOR THE FINALE, CASH.\n> STARKWEATHER IS SAVING IT.");
+        } else {
+          typeText("> VALIANT VIDEO ENTERPRISES\n> LEAVE YOUR ORDER AFTER THE BEEP.\n> PRICE: $2.99/MIN.\n> WE KNOW WHERE YOU LIVE.");
+        }
+      }
+      // 3. CASH (2274) — главный герой
+      else if (n === "2274") {
+        dialState = "cash";
+        typeText("> JAMES EARL CASH.\n> THE PIG WHO WOULDN'T STAY DEAD.\n> WE'RE STILL FILMING, CASH.\n> HUNTING SEASON NEVER ENDS FOR YOU.");
+      }
+      // 4. HUNTER (486837) — многошаговый диалог
+      else if (n === "486837") {
+        if (dialState === "hunter") {
+          dialState = "hunter2";
+          typeText("> STARKWEATHER LIKES WHAT HE SEES.\n> MORE BLOOD. MORE DRAMA.\n> AND BRING THE CAMERA CLOSER.");
+        } else {
+          dialState = "hunter";
+          typeText("> HUNTING SEASON IS OPEN.\n> SKINZ. WARDOGS. INNOCENTZ.\n> THEY ALL WANT A PIECE OF YOU.\n> STAY LOW. STAY ALIVE.");
+        }
+      }
+      // 5. PORTER (767837) — доктор
+      else if (n === "767837") {
+        dialState = "porter";
+        typeText("> DR. PORTER IS NOT IN.\n> HE LEFT THE BUILDING.\n> PERMANENTLY.\n> STOP CALLING THIS NUMBER.");
+      }
+      // 6. DIE (343)
+      else if (n === "343") {
+        typeText("> SOON.\n> EVERY PIG DIES EVENTUALLY.\n> TODAY IS A GOOD DAY FOR IT.");
+      }
+      // 7. BURN (2876) — бензоколонка
+      else if (n === "2876") {
+        typeText("> THE GAS STATION REMEMBERS YOU.\n> THE SMELL OF IT. THE SCREAMING.\n> WE WERE ROLLING TAPE THE WHOLE TIME.");
+      }
+      // 8. SAW (729)
+      else if (n === "729") {
+        typeText("> WE HAVE MANY WAYS TO CUT YOU OPEN.\n> THE CHAINSAW WAS JUST THE WARM-UP.");
+      }
+      // 9. 666 — Пасхалка
+      else if (n === "666") {
+        dialState = "stark";
         typeText("> STARKWEATHER IS WATCHING YOU...\n> RUN.");
       }
-      // 4. Пасхалка на 000 (Секретный код)
-      else if (currentInput === "000") {
-        typeText("> VALIANT CLUB CODE:\n> DISCOUNT-1997\n> USE AT CHECKOUT.");
+      // 10. 000 — Секретный код
+      else if (n === "000") {
+        if (dialState === "stark") {
+          dialState = "club";
+          typeText("> VALIANT CLUB ACCESS GRANTED.\n> STARKWEATHER SENDS HIS REGARDS.\n> CODE: DISCOUNT-1997\n> USE AT CHECKOUT.");
+        } else {
+          typeText("> VALIANT CLUB CODE:\n> DISCOUNT-1997\n> USE AT CHECKOUT.");
+        }
       }
-      // 5. Пустой ввод
-      else if (currentInput === "") {
+      // 11. Пустой ввод
+      else if (n === "") {
         display.innerText = "ERROR: NO NUMBER";
-      } 
-      // 6. Любой другой неизвестный номер
+      }
+      // 12. Любой другой неизвестный номер
       else {
         display.innerText = "BUSY SIGNAL...\nTRY AGAIN LATER.";
         playTone(200, 'sawtooth', 0.4);

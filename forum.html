@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valiant Video Enterprises - Member Bulletin Board</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
+    <header class="navbar">
+        <button class="nav-btn" id="nav-signin">Sign-in</button>
+        <button class="nav-btn" id="nav-store">Adult Store</button>
+        <button class="nav-btn" id="nav-services">Services</button>
+        <button class="nav-btn active" id="nav-forum">Forum</button>
+    </header>
+
+    <main class="store-card forum-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+                <a href="store.html" class="cart-shortcut">[ STORE ]</a>
+                <a href="services.html" class="cart-shortcut" style="margin-left: 15px;">[ SERVICES ]</a>
+                <a href="hotline.html" class="cart-shortcut" style="margin-left: 15px;">[ HOTLINE ]</a>
+            </div>
+            <button id="logout-btn" class="nav-btn">← Sign-out / Return</button>
+        </div>
+
+        <h1 class="brand-title">valiant video enterprises</h1>
+        <h2 class="store-title">MEMBER BULLETIN BOARD</h2>
+        <p class="store-subtitle">POST OR GET OUT.</p>
+
+        <div class="store-warning">
+            <p>MEMBERS ONLY. HANDLES ONLY. NO QUESTIONS ASKED.</p>
+            <p class="small-red">THIS BOARD IS MONITORED. WE KNOW WHERE YOU LIVE.</p>
+        </div>
+
+        <!-- ПРАВИЛА BBS -->
+        <div class="bbs-rules">
+            <h3>BBS RULES // READ BEFORE POSTING</h3>
+            <ul>
+                <li>NO QUESTIONS ASKED. NO QUESTIONS ANSWERED.</li>
+                <li>DO NOT ASK FOR COPIES. DO NOT ASK FOR NAMES.</li>
+                <li>NO PERSONAL CHECKS. NO C.O.D.'S. NO RETURNS.</li>
+                <li>HANDLES ONLY. REAL NAMES GET YOU FILMED.</li>
+                <li>THREATS TO MANAGEMENT ARE TREATED AS REQUESTS.</li>
+                <li>THE BOARD IS MODERATED BY VALIANT. ALWAYS.</li>
+            </ul>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="bbs-stats">
+            <span>TOTAL POSTS: <b id="bbs-count">0</b></span>
+            <span>LAST POST BY: <b id="bbs-last">-</b></span>
+            <span>MEMBERS ONLINE: <b id="bbs-online">-</b></span>
+        </div>
+
+        <!-- НОВЫЙ ПОСТ -->
+        <div class="bbs-form">
+            <label for="bbs-nick">HANDLE:</label>
+            <input type="text" id="bbs-nick" maxlength="16" autocomplete="off" placeholder="e.g. REGULAR_DUST">
+
+            <label for="bbs-text">MESSAGE:</label>
+            <textarea id="bbs-text" rows="4" maxlength="500" placeholder="Type your message..."></textarea>
+
+            <button type="button" id="bbs-post-btn" class="bbs-post-btn">POST TO BOARD</button>
+            <p id="bbs-msg" class="checkout-msg"></p>
+        </div>
+
+        <!-- ПОСТЫ -->
+        <div id="bbs-posts"></div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
