@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Valiant Video Enterprises - Hot Line</title>
+  <style>
+    body {
+      background-color: #0b0b0b;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Корпус устройства */
+    .pager-device {
+      background: #1c1d1f;
+      border: 4px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      width: 340px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.9), inset 0 0 10px rgba(255,255,255,0.05);
+    }
+
+    .brand-header {
+      color: #888;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    /* Монохромный LCD экран */
+    .screen {
+      background-color: #051a05;
+      border: 3px solid #113311;
+      border-radius: 4px;
+      padding: 12px;
+      height: 110px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 15px rgba(0,255,0,0.2);
+    }
+
+    /* Эффект сканирующих линий (CRT) */
+    .screen::before {
+      content: " ";
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    .display-text {
+      font-size: 14px;
+      line-height: 1.4;
+      text-shadow: 0 0 5px #33ff33;
+      white-space: pre-wrap;
+    }
+
+    /* Кнопочный блок */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: #2a2c30;
+      color: #ddd;
+      border: 2px solid #444;
+      border-radius: 6px;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+      box-shadow: 0 3px 0 #111;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #111;
+    }
+
+    .btn-call {
+      background: #8b0000;
+      color: #fff;
+      border-color: #a00;
+      grid-column: span 3;
+    }
+    
+    .btn-call:hover {
+      background: #a00000;
+    }
+  </style>
+</head>
+<body>
+<a href="index.html" class="back-btn">← ВЕРНУТЬСЯ В КАТАЛОГ</a>
+<div class="pager-device">
+  <div class="brand-header">VALIANT VIDEO • PAINPAGER 1997</div>
+  
+  <div class="screen">
+    <div id="display" class="display-text">ENTER NUMBER...</div>
+  </div>
+
+  <div class="keypad">
+    <button class="btn" onclick="press('1')">1</button>
+    <button class="btn" onclick="press('2')">2</button>
+    <button class="btn" onclick="press('3')">3</button>
+    <button class="btn" onclick="press('4')">4</button>
+    <button class="btn" onclick="press('5')">5</button>
+    <button class="btn" onclick="press('6')">6</button>
+    <button class="btn" onclick="press('7')">7</button>
+    <button class="btn" onclick="press('8')">8</button>
+    <button class="btn" onclick="press('9')">9</button>
+    <button class="btn" onclick="press('*')">*</button>
+    <button class="btn" onclick="press('0')">0</button>
+    <button class="btn" onclick="clearInput()">C</button>
+    <button class="btn btn-call" onclick="makeCall()">[ DIAL / CONNECT ]</button>
+  </div>
+</div>
+
+<script>
+  let currentInput = "";
+  const display = document.getElementById('display');
+
+  // Звуковой синтезатор
+  function playTone(freq = 440, type = 'sine', duration = 0.08) {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  function press(val) {
+    playTone(600, 'square');
+    if (currentInput.length < 15) {
+      currentInput += val;
+      display.innerText = "DIAL: " + currentInput;
+    }
+  }
+
+  function clearInput() {
+    playTone(300, 'sawtooth');
+    currentInput = "";
+    display.innerText = "ENTER NUMBER...";
+  }
+
+  // Главная функция вызова
+  function makeCall() {
+    playTone(880, 'square', 0.2);
+    display.innerText = "CONNECTING...";
+
+    setTimeout(() => {
+      // 1. Проверка на 911
+      if (currentInput === "911") {
+        playTone(150, 'sawtooth', 0.5); // Низкий тревожный звук
+        typeText("!!! WARNING !!!\nLINE INTERCEPTED\nCOMMUNICATION IS BLOCKED");
+      } 
+      // 2. Проверка на номер Starkweather (1900 или 900)
+      else if (currentInput.includes("1900") || currentInput.includes("900")) {
+        typeText("> VALIANT VIDEO ENTERPRISES\n> LEAVE YOUR ORDER AFTER THE BEEP.\n> PRICE: $2.99/MIN.\n> WE KNOW WHERE YOU LIVE.");
+      } 
+      // 3. Пасхалка на 666
+      else if (currentInput === "666") {
+        typeText("> STARKWEATHER IS WATCHING YOU...\n> RUN.");
+      }
+      // 4. Пасхалка на 000 (Секретный код)
+      else if (currentInput === "000") {
+        typeText("> VALIANT CLUB CODE:\n> DISCOUNT-1997\n> USE AT CHECKOUT.");
+      }
+      // 5. Пустой ввод
+      else if (currentInput === "") {
+        display.innerText = "ERROR: NO NUMBER";
+      } 
+      // 6. Любой другой неизвестный номер
+      else {
+        display.innerText = "BUSY SIGNAL...\nTRY AGAIN LATER.";
+        playTone(200, 'sawtooth', 0.4);
+      }
+    }, 1000);
+  }
+
+  // Функция посимвольной печати текста с аудио-кликом
+  function typeText(text) {
+    display.innerText = "";
+    let i = 0;
+    
+    const timer = setInterval(() => {
+      display.innerText += text[i];
+      playTone(700, 'sine', 0.02);
+      i++;
+      if (i >= text.length) {
+        clearInterval(timer);
+      }
+    }, 35);
+  }
+</script>
+
+</body>
+</html>

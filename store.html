@@ -14,9 +14,9 @@
         <button class="nav-btn active" id="nav-store">Adult Store</button>
     </header>
 
-    <!-- СЕКРЕТНЫЙ КАТАЛОГ -->
     <main class="store-card">
-        <div style="text-align: right; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <a href="#cart-section" class="cart-shortcut">🛒 CART (<span id="cart-count">0</span>)</a>
             <button id="logout-btn" class="nav-btn">← Sign-out / Return</button>
         </div>
 
@@ -32,7 +32,7 @@
         <!-- СПИСОК ТОВАРОВ -->
         <div class="products-list">
 
-            <!-- Товар 1: Plastic Bag -->
+            <!-- Товар 1 -->
             <div class="product-item">
                 <div class="product-info">
                     <img src="assets/plastic_bag_vve.png" alt="Plastic Bag" class="product-img">
@@ -40,22 +40,20 @@
                         <h4>PLASTIC BAG</h4>
                         <ul>
                             <li>* Strong and durable</li>
-                            <li>* Easily folds away into pocket</li>
                             <li>* Fits snugly over head</li>
-                            <li>* Pack of 3 in assorted colors eg: blue, pink...</li>
+                            <li>* Pack of 3 in assorted colors</li>
                         </ul>
                     </div>
                 </div>
                 <div class="product-bar">
                     <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
                     <span>ITEM: NO.001</span>
-                    <span>PLASTIC BAG</span>
-                    <span>PRICE: $10</span>
-                    <button class="buy-btn">Add to Cart</button>
+                    <span>PRICE: $10.00</span>
+                    <button class="buy-btn" data-name="PLASTIC BAG" data-price="10.00">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Товар 2: Latex Gloves -->
+            <!-- Товар 2 -->
             <div class="product-item">
                 <div class="product-info">
                     <img src="assets/blue_latex_gloves_vve.png" alt="Latex Gloves" class="product-img">
@@ -64,8 +62,6 @@
                         <ul>
                             <li>* Strong and durable</li>
                             <li>* Seam free</li>
-                            <li>* One size fits all</li>
-                            <li>* Strong odor of latex</li>
                             <li>* Box of 20</li>
                         </ul>
                     </div>
@@ -73,22 +69,19 @@
                 <div class="product-bar">
                     <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
                     <span>ITEM: NO.002</span>
-                    <span>LATEX GLOVES</span>
                     <span>PRICE: $9.99</span>
-                    <button class="buy-btn">Add to Cart</button>
+                    <button class="buy-btn" data-name="LATEX GLOVES" data-price="9.99">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Товар 3: VHS Tapes -->
+            <!-- Товар 3 -->
             <div class="product-item">
                 <div class="product-info">
                     <img src="assets/VHS_cassetes_vve.png" alt="PROF VHS NTSC" class="product-img">
                     <div class="product-desc">
                         <h4>PROFESSIONAL VHS NTSC TAPES 5HRS</h4>
                         <ul>
-                            <li>* Long lasting</li>
-                            <li>* Guaranteed for 5 years</li>
-                            <li>* Very Durable</li>
+                            <li>* Long lasting / Guaranteed for 5 years</li>
                             <li>* Sold in bulk - 50 ct. carton</li>
                         </ul>
                     </div>
@@ -96,21 +89,19 @@
                 <div class="product-bar">
                     <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
                     <span>ITEM: NO.004</span>
-                    <span>PROF VHS NTSC</span>
                     <span>PRICE: $17.99</span>
-                    <button class="buy-btn">Add to Cart</button>
+                    <button class="buy-btn" data-name="PROF VHS NTSC TAPES" data-price="17.99">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Товар 4: Wooden Bat -->
+            <!-- Товар 4 -->
             <div class="product-item">
                 <div class="product-info">
                     <img src="assets/wooden_bat_vve.png" alt="Wooden Bat" class="product-img">
                     <div class="product-desc">
                         <h4>WOODEN BAT</h4>
                         <ul>
-                            <li>* Some are stained with blood and other fluids</li>
-                            <li>* Nice thing to own for Valiant fan</li>
+                            <li>* Stained with blood and other fluids</li>
                             <li>* Signed by you know who</li>
                         </ul>
                     </div>
@@ -118,13 +109,55 @@
                 <div class="product-bar">
                     <span>QTY: <input type="number" value="1" min="1" max="99" class="qty-input"></span>
                     <span>ITEM: NO.005</span>
-                    <span>WOODEN BAT</span>
-                    <span>PRICE: $130</span>
-                    <button class="buy-btn">Add to Cart</button>
+                    <span>PRICE: $130.00</span>
+                    <button class="buy-btn" data-name="WOODEN BAT" data-price="130.00">Add to Cart</button>
                 </div>
             </div>
 
         </div>
+
+        <!-- ================= БЛОК КОРЗИНЫ ================= -->
+        <div id="cart-section" class="cart-box">
+            <h3 class="cart-title">--- YOUR SHOPPING CART ---</h3>
+
+            <!-- Таблица товаров -->
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>ITEM</th>
+                        <th>QTY</th>
+                        <th>PRICE</th>
+                        <th>TOTAL</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items-body">
+                    <!-- Заполняется динамически из JS -->
+                </tbody>
+            </table>
+
+            <div class="cart-total-bar">
+                <span>TOTAL AMOUNT:</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+
+            <!-- Данные покупателя -->
+            <div class="checkout-form">
+                <div class="cart-field">
+                    <label for="msg-box">MESSAGE BOX &lt;NUMBER&gt;:</label>
+                    <input type="text" id="msg-box" placeholder="e.g. BOX #402" autocomplete="off">
+                </div>
+
+                <div class="cart-field">
+                    <label for="delivery-address">DELIVERY ADDRESS / DROP LOCATION:</label>
+                    <textarea id="delivery-address" rows="2" placeholder="Enter drop point or discreet address..."></textarea>
+                </div>
+
+                <button id="place-order-btn" class="place-order-btn">PLACE ORDER NOW</button>
+                <p id="checkout-msg" class="checkout-msg"></p>
+            </div>
+        </div>
+
     </main>
 
     <script src="script.js"></script>
